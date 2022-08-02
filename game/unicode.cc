@@ -25,7 +25,7 @@ Converter::Converter(Converter&& c) noexcept:
 	m_converter(std::move(c.m_converter)),
 	m_error(std::move(c.m_error)) {}
 
-icu::UnicodeString Converter::convertToUTF8(std::string_view sv) {
+icu::UnicodeString Converter::convertToUTF8(const std::string_view sv) {
 	std::scoped_lock l(m_lock);
 	icu::UnicodeString ret(sv.data(), -1, m_converter.get(), m_error);
 	if (m_error.isFailure()) throw std::runtime_error("Couldn't convert string: " + std::string(sv) + " to UTF-8. Error: " + std::to_string(m_error.get()) + ": " + m_error.errorName());
@@ -36,7 +36,7 @@ Converter& UnicodeUtil::getConverter(std::string const& s) {
 	return m_converters.try_emplace(s, Converter(s)).first->second;
 }
 
-std::string UnicodeUtil::getCharset (std::string_view str) {
+std::string UnicodeUtil::getCharset (const std::string_view str) {
 	int bytes_consumed;
 	bool is_reliable;
 	
@@ -107,7 +107,7 @@ bool UnicodeUtil::removeUTF8BOM(std::string_view str) {
 	return false;
 }
 
-bool UnicodeUtil::caseEqual (std::string_view lhs, std::string_view rhs, bool assumeUTF8) {
+bool UnicodeUtil::caseEqual (const std::string_view lhs, const std::string_view rhs, bool assumeUTF8) {
 	if (lhs == rhs) return true; // Early return
 	std::string lhsCharset;
 	std::string rhsCharset;
@@ -129,7 +129,7 @@ bool UnicodeUtil::caseEqual (std::string_view lhs, std::string_view rhs, bool as
 	return (result == 0);
 }
 
-bool UnicodeUtil::isRTL(std::string_view str) {
+bool UnicodeUtil::isRTL(const std::string_view str) {
 	bool _return = false;
 	icu::ErrorCode _unicodeError;
 	std::string charset(UnicodeUtil::getCharset(str));
@@ -156,15 +156,15 @@ bool UnicodeUtil::isRTL(std::string_view str) {
 	return _return;
 }
 
-std::string UnicodeUtil::toLower (std::string_view str) {
+std::string UnicodeUtil::toLower (const std::string_view str) {
 	return convertToUTF8 (str, "", CaseMapping::LOWER);
 }
 
-std::string UnicodeUtil::toUpper (std::string_view str) {
+std::string UnicodeUtil::toUpper (const std::string_view str) {
 	return convertToUTF8 (str, "", CaseMapping::UPPER);
 }
 
-std::string UnicodeUtil::toTitle (std::string_view str) {
+std::string UnicodeUtil::toTitle (const std::string_view str) {
 	return convertToUTF8 (str, "", CaseMapping::TITLE);
 }
 

@@ -22,7 +22,7 @@ struct Converter {
 	Converter(Converter& c) = delete;
 	Converter(Converter const& c) = delete;	
 
-	icu::UnicodeString convertToUTF8(std::string_view sv); ///< Do the actual conversion.
+	icu::UnicodeString convertToUTF8(const std::string_view sv); ///< Do the actual conversion.
 
 	private:
 	std::string m_codepage;
@@ -36,7 +36,7 @@ class UnicodeUtil {
 	static std::map<std::string, Converter> m_converters;
 	enum class CaseMapping { LOWER, UPPER, TITLE, NONE };
 
-	static std::string getCharset(std::string_view str);
+	static std::string getCharset(const std::string_view str);
 	static Converter& getConverter(std::string const& s);
 	static bool removeUTF8BOM(std::string_view str);
 	
@@ -45,11 +45,11 @@ class UnicodeUtil {
 	~UnicodeUtil() = delete;
 	static void collate (songMetadata& stringmap);
 	static std::string convertToUTF8 (std::string_view str, std::string _filename = std::string(), CaseMapping toCase = CaseMapping::NONE, bool assumeUTF8 = false);
-	static bool caseEqual (std::string_view lhs, std::string_view rhs, bool assumeUTF8 = false);
+	static bool caseEqual (const std::string_view lhs, const std::string_view rhs, bool assumeUTF8 = false);
 	static bool isRTL(std::string_view str); ///< FIXME: This won't be used for now, but it might be useful if we eventually implement RTL translations. As-is, at least on my mac, Performous is refusing to render Arabic text, although it might be a font issue.
-	static std::string toLower (std::string_view str);
-	static std::string toUpper (std::string_view str);
-	static std::string toTitle (std::string_view str);
+	static std::string toLower (const std::string_view str);
+	static std::string toUpper (const std::string_view str);
+	static std::string toTitle (const std::string_view str);
 
 	static std::unique_ptr<icu::RuleBasedCollator> m_searchCollator;
 	static std::unique_ptr<icu::RuleBasedCollator> m_sortCollator;
