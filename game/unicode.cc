@@ -3,6 +3,7 @@
 #include "configuration.hh"
 #include "game.hh"
 
+#include <iostream>
 #include <regex>
 #include <stdexcept>
 #include <unicode/unistr.h>
@@ -100,6 +101,7 @@ std::string UnicodeUtil::convertToUTF8 (std::string_view str, std::string _filen
 
 bool UnicodeUtil::removeUTF8BOM(std::string_view str) {
 	// Test for UTF-8 BOM (a three-byte sequence at the beginning of a file)
+	std::clog << "removeBOM/debug: " << std::hex << std::setw(2) << std::setfill('0') << unsigned(static_cast<unsigned char>(str[0])) << unsigned(static_cast<unsigned char>(str[1])) << unsigned(static_cast<unsigned char>(str[2])) << std::endl;
 	if (str.substr(0, 3) == "\xEF\xBB\xBF") {
 		str = str.substr(3); // Remove BOM if there is one
 		return true;

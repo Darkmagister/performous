@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <stdexcept>
 
+#include <iostream>
+
 /// @file
 /// Functions used for parsing the UltraStar TXT song format
 
@@ -13,6 +15,8 @@ using namespace SongParserUtil;
 
 /// 'Magick' to check if this file looks like correct format
 bool SongParser::txtCheck(std::string const& data) const {
+	std::clog << "txtCheck/debug: data[0]: " << std::hex << int(data[0]) << std::endl;
+	std::clog << "textCheck/debug: data[1]: " << std::hex << int(data[1]) << std::endl;
 	return data[0] == '#' && data[1] >= 'A' && data[1] <= 'Z';
 }
 
